@@ -844,6 +844,11 @@
   dependencies:
     "@prisma/debug" "5.14.0"
 
+"@rgrove/parse-xml@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@rgrove/parse-xml/-/parse-xml-4.1.0.tgz#ff489b59c4794569fa1b798515eef6826daeeb5e"
+  integrity sha512-pBiltENdy8SfI0AeR1e5TRpS9/9Gl0eiOEt6ful2jQfzsgvZYWqsKiBWaOCLdocQuk0wS7KOHI37n0C1pnKqTw==
+
 "@sinclair/typebox@^0.27.8":
   version "0.27.8"
   resolved "https://registry.yarnpkg.com/@sinclair/typebox/-/typebox-0.27.8.tgz#6667fac16c436b5434a387a34dedb013198f6e6e"
@@ -2528,6 +2533,13 @@ flatted@^3.2.9:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.3.1.tgz#21db470729a6734d4997002f439cb308987f567a"
   integrity sha512-X8cqMLLie7KsNUDSdzeN8FYK9rEt4Dt67OsG/DNGnYTSDBG4uFAJFBnUeiV+zCVAvwFy56IjM9sH51jVaEhNxw==
+
+flickr-sdk@^7.0.0-beta.7:
+  version "7.0.0-beta.7"
+  resolved "https://registry.yarnpkg.com/flickr-sdk/-/flickr-sdk-7.0.0-beta.7.tgz#1a32b57df2743f73283d5f5c114fcfc6dea75576"
+  integrity sha512-ILmQuRSioeFht0vAhQUBfuLaHVxxmI4b9H1/GVuvj7u8kDc7Wkfb3b118Mt8L1joS0fQeAhDRb8irzxNUymtng==
+  dependencies:
+    "@rgrove/parse-xml" "^4.1.0"
 
 foreground-child@^3.1.0:
   version "3.1.1"
