@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { FlickrService } from './flickr.service';
 import { PhotoService } from './photo.service';
 import { Prisma } from '@prisma/client';
@@ -38,5 +46,10 @@ export class PhotoController {
     } else {
       return this.photoService.findAll(page, limit);
     }
+  }
+
+  @Delete(':id')
+  delete(@Param('id') id: string) {
+    return this.photoService.delete(id);
   }
 }

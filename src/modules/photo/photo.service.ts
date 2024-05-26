@@ -91,4 +91,11 @@ export class PhotoService {
     }));
     return data;
   }
+
+  async delete(id: string) {
+    const data = await this.dbService.photo.delete({
+      where: { id: id },
+    });
+    return data;
+  }
 }
