@@ -7,25 +7,23 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { FlickrService } from './flickr.service';
 import { PhotoService } from './photo.service';
 import { Prisma } from '@prisma/client';
 import { FindPhotosDto } from './dto/find-photo.dto';
+import { FlickrService } from './flickr.service';
 
 @Controller('photo')
 export class PhotoController {
   constructor(
-    private readonly flickerService: FlickrService,
     private readonly photoService: PhotoService,
+    private readonly flickrService: FlickrService,
   ) {}
 
   @Get('flickr')
   async searchCatPhotos() {
     const { page, limit } = { page: '1', limit: '10' };
-    const searchImgs = await this.flickerService.searchCatPhotos(page, limit);
-    return await this.flickerService.getPhotoInfo(
-      searchImgs.photos.photo[0].id,
-    );
+    const searchImgs = await this.flickrService.searchCatPhotos(page, limit);
+    return await this.flickrService.getPhotoInfo(searchImgs.photos.photo[0].id);
   }
   @Post()
   async create(@Body() createPhotoDto: Prisma.PhotoCreateInput) {

@@ -26,6 +26,9 @@ export class PhotoService {
         include: {
           tags: { include: { tag: true } },
         },
+        orderBy: {
+          publishedAt: 'desc',
+        },
       }),
       this.dbService.photo.count(),
     ]);

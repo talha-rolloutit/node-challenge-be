@@ -1,12 +1,10 @@
 import { Module, OnModuleInit } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { DbModule, EnvConfigModule } from './config';
 import { FlickrService, PhotoModule } from './modules';
 import { PhotoService } from './modules/photo/photo.service';
 
 @Module({
   imports: [DbModule, EnvConfigModule, PhotoModule],
-  controllers: [AppController],
 })
 export class AppModule implements OnModuleInit {
   constructor(
