@@ -11,6 +11,7 @@ import { PhotoService } from './photo.service';
 import { Prisma } from '@prisma/client';
 import { FindPhotosDto } from './dto/find-photo.dto';
 import { FlickrService } from './flickr.service';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Controller('photo')
 export class PhotoController {
@@ -49,5 +50,43 @@ export class PhotoController {
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.photoService.delete(id);
+  }
+  @Cron(CronExpression.EVERY_10_SECONDS)
+  async addNewPhotos() {
+    const schedular = {
+      page: 1,
+      limit: 10,
+      flag: false,
+      recentPublished: undefined,
+    };
+
+    const recentPhoto = await this.photoService.findAll(1, 1);
+    if (recentPhoto.data.length > 0) {
+      (schedular.flag = true),
+        (schedular.recentPublished = recentPhoto.data[0].publishedAt);
+    }
+    while (schedular.flag) {
+      const searchedPhotos = await this.flickrService.searchCatPhotos(
+        `${schedular.page}`,
+        `${schedular.limit}`,
+      );
+
+      if (searchedPhotos.photos.photo.length > 0) {
+        const photosPayload = [];
+        for (const photo of searchedPhotos.photos.photo) {
+          photosPayload.push(this.flickrService.getPhotoInfo(photo.id));
+        }
+        const createdPhotos = await Promise.all(photosPayload);
+        for (const photo of createdPhotos) {
+          if (photo.publishedAt >= schedular.recentPublished) {
+            await this.photoService.create(photo);
+          } else {
+            schedular.flag = false;
+            break;
+          }
+        }
+        schedular.page = schedular.page + 1;
+      }
+    }
   }
 }
