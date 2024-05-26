@@ -17,4 +17,78 @@ export class PhotoService {
     });
     return photo;
   }
+  async findAll(page: number, limit: number) {
+    const skip = (page - 1) * limit;
+    const [photos, total] = await Promise.all([
+      this.dbService.photo.findMany({
+        skip,
+        take: limit,
+        include: {
+          tags: { include: { tag: true } },
+        },
+      }),
+      this.dbService.photo.count(),
+    ]);
+
+    return {
+      data: photos,
+      meta: { total: total, limit: limit },
+    };
+  }
+  async findTagPhotos(tagId: string, page: number, limit: number) {
+    const skip = (page - 1) * limit;
+    const where = {
+      tags: {
+        some: {
+          tagId: tagId,
+        },
+      },
+    };
+    const [photos, total] = await Promise.all([
+      this.dbService.photo.findMany({
+        where,
+        skip,
+        take: limit,
+        include: {
+          tags: { include: { tag: true } },
+        },
+        orderBy: {
+          publishedAt: 'desc',
+        },
+      }),
+      this.dbService.photo.count({
+        where,
+      }),
+    ]);
+
+    return {
+      data: photos,
+      meta: { total: total, limit: limit },
+    };
+  }
+  async getTopTags() {
+    const topTags = await this.dbService.tag.findMany({
+      orderBy: {
+        photos: {
+          _count: 'desc',
+        },
+      },
+      take: 10,
+      select: {
+        id: true,
+        name: true,
+        _count: {
+          select: {
+            photos: true,
+          },
+        },
+      },
+    });
+    const data = topTags.map((tag) => ({
+      id: tag.id,
+      name: tag.name,
+      count: tag._count.photos,
+    }));
+    return data;
+  }
 }

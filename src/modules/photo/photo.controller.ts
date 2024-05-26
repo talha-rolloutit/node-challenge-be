@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { FlickrService } from './flickr.service';
 import { PhotoService } from './photo.service';
 import { Prisma } from '@prisma/client';
+import { FindPhotosDto } from './dto/find-photo.dto';
 
 @Controller('photo')
 export class PhotoController {
@@ -22,5 +23,20 @@ export class PhotoController {
   async create(@Body() createPhotoDto: Prisma.PhotoCreateInput) {
     const data = await this.photoService.create(createPhotoDto);
     return data;
+  }
+  @Get('top-tags')
+  async findTopTags() {
+    const data = await this.photoService.getTopTags();
+    return data;
+  }
+
+  @Get()
+  async findAll(@Query() query: FindPhotosDto) {
+    const { page, limit, tagId } = query;
+    if (tagId) {
+      return this.photoService.findTagPhotos(tagId, page, limit);
+    } else {
+      return this.photoService.findAll(page, limit);
+    }
   }
 }
