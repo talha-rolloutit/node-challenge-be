@@ -98,4 +98,7 @@ export class PhotoService {
     });
     return data;
   }
+  async count() {
+    return await this.dbService.photo.count();
+  }
 }
