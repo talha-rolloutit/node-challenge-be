@@ -51,7 +51,7 @@ export class PhotoController {
   delete(@Param('id') id: string) {
     return this.photoService.delete(id);
   }
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_HOUR)
   async addNewPhotos() {
     const schedular = {
       page: 1,
